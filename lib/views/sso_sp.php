@@ -1,6 +1,7 @@
 <div class="wrap">
 
 <?php
+    $main_blog_id = '1';
     $idp = parse_ini_file( constant('SAMLAUTH_CONF') . '/config/saml20-idp-remote.ini',true);
     if($idp === FALSE)
     {
@@ -9,18 +10,18 @@
 ?>
 <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?page=' . basename(__FILE__); ?>&updated=true" enctype="multipart/form-data">
 <?php wp_nonce_field('sso_sp'); ?>
-<input type="hidden" name="MAX_FILE_SIZE" value="4194304" /> 
+<input type="hidden" name="MAX_FILE_SIZE" value="4194304" />
 <fieldset class="options">
 
 
 <h3>Authentication</h3>
 <table class="form-table">
-<?php 
+<?php
 /************************************************
 * With only one IdP, this field is not needed.
 ************************************************
   <tr valign="top">
-    <th scope="row"><label for="idp">Identity Provider</label></th> 
+    <th scope="row"><label for="idp">Identity Provider</label></th>
     <td>
     <select name="idp" id="idp">
       <?php foreach($idp as $key => $array) {
@@ -33,7 +34,7 @@
   <?php */ ?>
   <input type="hidden" name="idp" id="idp" value="<?php echo $this->settings->get_idp(); ?>" />
   <tr valign="top">
-    <th scope="row"><label for="nameidpolicy">NameID Policy: </label></th> 
+    <th scope="row"><label for="nameidpolicy">NameID Policy: </label></th>
     <td>
         <select name="nameidpolicy">
       <?php
@@ -59,14 +60,14 @@
     </td>
   </tr>
   <tr valign="top" class="manual_cert">
-    <th scope="row"><label for="certificate">Signing Certificate</label></th> 
+    <th scope="row"><label for="certificate">Signing Certificate</label></th>
     <?php
-            if(file_exists(constant('SAMLAUTH_CONF') . '/certs/' . get_current_blog_id() . '/' . get_current_blog_id() . '.cer') && file_exists(constant('SAMLAUTH_CONF') . '/certs/' . get_current_blog_id() . '/' . get_current_blog_id() . '.key'))
+            if(file_exists(constant('SAMLAUTH_CONF') . '/certs/' . $main_blog_id . '/' . $main_blog_id . '.cer') && file_exists(constant('SAMLAUTH_CONF') . '/certs/' . $main_blog_id . '/' . $main_blog_id . '.key'))
             {
-	            $certificate = file_get_contents( constant('SAMLAUTH_CONF') . '/certs/' . get_current_blog_id() . '/' . get_current_blog_id() . '.cer' );
+	            $certificate = file_get_contents( constant('SAMLAUTH_CONF') . '/certs/' . $main_blog_id . '/' . $main_blog_id . '.cer' );
 	            $certificate_cn = openssl_x509_parse($certificate);
 	            $certificate_cn = $certificate_cn['subject']['CN'];
-	            $privatekey = file_get_contents( constant('SAMLAUTH_CONF') . '/certs/' . get_current_blog_id() . '/' . get_current_blog_id() . '.key' );
+	            $privatekey = file_get_contents( constant('SAMLAUTH_CONF') . '/certs/' . $main_blog_id . '/' . $main_blog_id . '.key' );
 	            $privatekey_match = openssl_x509_check_private_key($certificate,$privatekey);
             }
             else
@@ -76,19 +77,19 @@
             	$privatekey_match = false;
             }
         ?>
-    <td><input type="file" name="certificate" id="certificate" /><?php if($certificate !== false ) {echo '&nbsp;<span class="green">Using certificate: <strong>' . $certificate_cn . '</strong>.</span> <a href="' . constant('SAMLAUTH_CONF_URL') . '/certs/' . get_current_blog_id() . '/' . get_current_blog_id() . '.cer' . '" target="_blank">[download]</a>';}?>
+    <td><input type="file" name="certificate" id="certificate" /><?php if($certificate !== false ) {echo '&nbsp;<span class="green">Using certificate: <strong>' . $certificate_cn . '</strong>.</span> <a href="' . constant('SAMLAUTH_CONF_URL') . '/certs/' . $main_blog_id . '/' . $main_blog_id . '.cer' . '" target="_blank">[download]</a>';}?>
     <br/>
-    <span class="setting-description">This doesn't have to be the certificate used to secure your website, it can just be self-signed.</span> 
+    <span class="setting-description">This doesn't have to be the certificate used to secure your website, it can just be self-signed.</span>
     </td>
   </tr>
    <tr valign="top" class="manual_cert">
-    <th scope="row"><label for="privatekey">Signing Private Key</label></th> 
+    <th scope="row"><label for="privatekey">Signing Private Key</label></th>
     <td><input type="file" name="privatekey" id="privatekey" /><?php if($privatekey_match){echo '&nbsp;<span class="green">Your private key matches the certificate.</span>';}?>
     <br/>
-    <span class="setting-description">The key is used to sign login requests. This is created when you create your certificate.</span> 
+    <span class="setting-description">The key is used to sign login requests. This is created when you create your certificate.</span>
     </td>
-  </tr> 
-</table> 
+  </tr>
+</table>
 <h3>Attributes</h3>
 <table class="form-table">
   <tr valign="top">
@@ -102,30 +103,30 @@
     </td>
   </tr>
   <tr valign="top">
-    <th scope="row"><label for="username_attribute">Attribute to be used as username</label></th> 
+    <th scope="row"><label for="username_attribute">Attribute to be used as username</label></th>
     <td><input type="text" name="username_attribute" id="username_attribute_inp" value="<?php echo $this->settings->get_attribute('username'); ?>" size="40" data-if-empty="error" />
     </td>
   </tr>
 
     <tr valign="top">
-    <th scope="row"><label for="firstname_attribute">Attribute to be used as First Name</label></th> 
+    <th scope="row"><label for="firstname_attribute">Attribute to be used as First Name</label></th>
     <td><input type="text" name="firstname_attribute" id="firstname_attribute_inp" value="<?php echo $this->settings->get_attribute('firstname'); ?>" size="40" data-if-empty="warning" />
     </td>
   </tr>
 
     <tr valign="top">
-    <th scope="row"><label for="lastname_attribute">Attribute to be used as Last Name</label></th> 
+    <th scope="row"><label for="lastname_attribute">Attribute to be used as Last Name</label></th>
     <td><input type="text" name="lastname_attribute" id="lastname_attribute_inp" value="<?php echo $this->settings->get_attribute('lastname'); ?>" size="40" data-if-empty="warning" />
     </td>
   </tr>
 
     <tr valign="top">
-    <th scope="row"><label for="email_attribute">Attribute to be used as E-mail</label></th> 
+    <th scope="row"><label for="email_attribute">Attribute to be used as E-mail</label></th>
     <td><input type="text" name="email_attribute" id="email_attribute_inp" value="<?php echo $this->settings->get_attribute('email'); ?>" size="40" data-if-empty="warning" />
     </td>
   </tr>
   <tr valign="top">
-    <th scope="row"><label for="groups_attribute">Attribute to be used as Groups</label></th> 
+    <th scope="row"><label for="groups_attribute">Attribute to be used as Groups</label></th>
     <td><input type="text" name="groups_attribute" id="groups_attribute_inp" value="<?php echo $this->settings->get_attribute('groups'); ?>" size="40" data-if-empty="error" />
     </td>
   </tr>
@@ -180,7 +181,7 @@
   function idpDefaults(idp)
   {
     var $ = jQuery;
-    
+
     if( typeof idp === 'undefined' )
     {
       return false;
@@ -218,4 +219,3 @@
     }
   }
 </script>
-
