@@ -1,8 +1,13 @@
 <?php
 
-$wp_opt = get_option('saml_authentication_options');
 $blog_id = (string)get_current_blog_id();
+$wp_opt = get_option('saml_authentication_options');
 
+$blog_entityid = NULL;
+$blog_details = get_blog_details($blog_id);
+if ( !empty( $blog_details ) ) {
+	$blog_entityid = $blog_details->siteurl . "/wp-content/plugins/saml-20-single-sign-on/saml/www/module.php/saml/sp/metadata.php/" . $blog_id;
+}
 
 $config = array(
 
@@ -23,7 +28,8 @@ $config = array(
 		'NameIDPolicy' => $wp_opt['nameidpolicy'],
 		// The entity ID of this SP.
 		// Can be NULL/unset, in which case an entity ID is generated based on the metadata URL.
-		'entityID' => NULL,
+		//'entityID' => NULL,
+		'entityID' => $blog_entityid,
 		'sign.authnrequest' => TRUE,
 		'sign.logout' => TRUE,
 		'redirect.sign' => TRUE,

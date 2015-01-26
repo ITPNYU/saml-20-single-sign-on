@@ -25,7 +25,7 @@ define('WP_USE_THEMES', false);
 require('../../../../../wp-blog-header.php');
 
 // WPEngine really messes up port detection
-//$_SERVER['SERVER_PORT'] = 443;
+$_SERVER['SERVER_PORT'] = 443;
 
 /* Initialize the autoloader. */
 require_once(dirname(dirname(__FILE__)) . '/lib/_autoload.php');

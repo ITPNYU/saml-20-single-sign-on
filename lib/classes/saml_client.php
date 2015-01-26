@@ -39,6 +39,7 @@ class SAML_Client
     if( isset($_GET['loggedout']) && $_GET['loggedout'] == 'true' )
     {
       header('Location: ' . get_option('siteurl'));
+      //header('Location: ' . network_site_url());
       exit();
     }
     elseif ( $this->settings->get_allow_sso_bypass() == true  && (( isset($_GET['use_sso']) && $_GET['use_sso'] == 'false' ) || ( isset($_POST['use_sso']) && $_POST['use_sso'] == 'false' )) )
