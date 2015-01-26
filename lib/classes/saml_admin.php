@@ -185,7 +185,7 @@ Class SAML_Admin
       }
     }
 
-    if(file_exists(constant('SAMLAUTH_CONF') . '/certs/' . $main_blog_id() . '/' . $main_blog_id() . '.cer') && file_exists(constant('SAMLAUTH_CONF') . '/certs/' . $main_blog_id() . '/' . $main_blog_id() . '.key'))
+    if(file_exists(constant('SAMLAUTH_CONF') . '/certs/' . $main_blog_id . '/' . $main_blog_id . '.cer') && file_exists(constant('SAMLAUTH_CONF') . '/certs/' . $main_blog_id . '/' . $main_blog_id . '.key'))
     {
       $return->html .= $status_html['ok'][0] . $status['sp_certificate']['ok'] . $status_html['ok'][1];
     }
